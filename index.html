@@ -1,37 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes App</title>
-</head>
-<body>
-
-    <h1>ToDo App</h1>
-    <div id="tasks-container">
-
-    </div>
-
-    <script>
-        const tasks = ["buy vegetables","revise localstorage","go to the gym","read a book"];
-
-        function loadTasks(){
-            const taskscontainer = document.getElementById('tasks-container');
-            taskscontainer.innerHTML='';
-
-            for(const task of tasks){
-                taskscontainer.innerHTML += `
-                <div>
-                    ${task}
-                </div>    
-                `
-                
-            
-                
-            }
+    <title>Document</title>
+    <style>
+        .todo-item {
+            border: 4px double black;
+            padding: 5px;
+            margin: 5px;
+            border-radius: 5px;
+            background-color: #F1D3CE;
+            color: black;
+            display: flex;
+            justify-content: space-between;
         }
-        loadTasks();
+
+        .btn {
+            background-color: #C5705D;
+            color: black;
+            font-size: 9px;
+            border: none;
+            border-radius: 22px;
+            cursor: pointer;
+            height: 18px;
+        }
+
+        
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 10px auto;
+           
+        }
+        .input{
+            width: 400px;
+            height: 20px;
+        }
+        .btn{
+            margin-left: 20px;
+            height: 20px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ToDoApp</h1>
+    <div id="tasks-container">
+        
+    </div>
+    <div class="btn-container">
+        <input type="text" class="input" placeholder= "Enter task" id="task-input">
+        <button class="btn" onclick="addTask()">Add</button>
+    </div>
+    <script>
+        const tasks = [];
+        function loadFromLocalStorage() {
+            const allTasks = JSON.parse(localStorage.getItem('allTasks'));
+            if (allTasks) {
+                tasks.push(...allTasks)
+            }
+            loadtasks();
+
+        }
+        loadFromLocalStorage();
+
+        function loadtasks() {
+            localStorage.setItem('allTasks', JSON.stringify(tasks));
+            const taskscontainer = document.getElementById("tasks-container");
+            taskscontainer.innerHTML = "";
+
+            for (const task of tasks) {
+
+                taskscontainer.innerHTML +=
+                    `<div class = "todo-item">
+                    ${task}
+                    <button class ="btn" type = "button" onclick = "removeTask('${task}')">Remove</button>
+                </div>`
+
+            }
+
+
+        }
+        loadtasks();
+        function removeTask(task) {
+            const taskIndex = tasks.indexOf(task);
+            tasks.splice(taskIndex, 1);
+            loadtasks();
+        }
+        function addTask() {
+            const taskInputElement = document.getElementById('task-input');
+            const task = taskInputElement.value;
+            if (!task) {
+                alert('please enter task');
+                return;
+            }
+            tasks.unshift(task);
+            loadtasks();
+            taskInputElement.value = "";
+
+        }
+
 
     </script>
+
 </body>
+
 </html>
